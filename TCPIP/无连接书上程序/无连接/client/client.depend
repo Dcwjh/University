@@ -1,0 +1,5 @@
+# depslib dependency file v1.0
+1489540810 source:c:\users\mr.wang\desktop\2017上大三下\tcpip\无连接\client\client.c
+	<Winsock2.h>
+	<stdio.h>
+

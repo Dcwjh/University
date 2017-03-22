@@ -1,0 +1,9 @@
+# depslib dependency file v1.0
+1488972850 source:c:\users\mr.wang\desktop\2017上大三下\tcpip\server\client\main.cpp
+	<Winsock2.h>
+	<stdio.h>
+
+1490150358 source:c:\users\mr.wang\desktop\2017上大三下\tcpip\有链接\client\client\main.cpp
+	<Winsock2.h>
+	<stdio.h>
+
