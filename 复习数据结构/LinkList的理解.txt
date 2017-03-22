@@ -1,0 +1,19 @@
+无论是否采用二级指针，但实际上在函数调用 的过程中，都是采用传递地址的方式进行参数的传递；
+
+typedef struct node
+
+{
+
+int data;
+
+struct node *next;
+
+}node,*linklist;
+
+typedef为数据类型取别名；将数据结构node取名为node，并且linklist为指向该结构的指针；即node为结构，linklist为结构指针；
+
+1.void create(linklist la);//la：指向结构体的指针；
+
+2.void create(linklist *la);//la:指向结构体指针的指针，即二级指针；
+
+3.void create(linklist &la);//la:指向结构体的指针；(但函数实际上传递的是la的地址，并非la指向的地址，即&la相当于函数2中的la)

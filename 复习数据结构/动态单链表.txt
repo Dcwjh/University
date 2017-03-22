@@ -1,0 +1,152 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <malloc.h>
+
+#define LIST_INIT_SIZE 100
+#define LISTCREATEMENT 10
+#define bool int
+#define true 0
+#define false 1
+
+typedef int ElemType;
+typedef struct LNode{
+    ElemType data;
+    struct LNode *next;
+}LNode,*LinkList;       //LinkList表示结构指针
+
+
+//int InitList(LinkList *p){
+  //  *p = (LinkList)malloc(sizeof(LNode));
+  //  if(*p == 0)
+  //      return -1;
+   // (*p)->next = NULL;
+  //  return 0;
+//}
+//尾插法
+void CreateListHead(LinkList *L, int n){
+    int i;
+    LinkList p;
+    (*L) = (LinkList)malloc(sizeof(LNode));    //分配空间
+    (*L)->next = NULL;                         //初始化
+    printf("Please input %d element:\n",n);
+    for(i = n; i > 0; i--){
+        p = (LinkList)malloc(sizeof(LNode));
+        scanf("%d",&p->data);
+        p->next = (*L)->next;
+        (*L)->next = p;
+    }
+}
+
+void CreateListTail(LinkList *L, int n){//因为头指针不变所以，正序插入比较麻烦
+    int i;
+    LinkList p,q;
+    (*L) = (LinkList)malloc(sizeof(LNode));
+    (*L)->next = NULL;
+    q = *L;
+    printf("Please input %d element:\n",n);
+    for(i = n; i > 0; i--){
+        p = (LinkList)malloc(sizeof(LNode));
+        scanf("%d",&p->data);
+        p->next = NULL;
+        q->next = p;
+        q = p;
+
+    }
+}
+
+int GetELem(LinkList L,int i,ElemType *e){   //引用是引用的同一个量，而指针是指向该变量的物理地址
+    int j;
+    LinkList p;
+    p = L->next;
+    j = 1;
+    while(p && j < i){
+        p = p->next;
+        ++j;
+    }
+    if(!p || j > i)
+        return 0;
+    *e = p->data;
+    return 1;
+
+}
+
+int ListInsert(LinkList *L, int i, ElemType e){    //*L表示指针，指向调用该函数中的链表，L表示该链表的头指针的地址值
+    LinkList p;
+    LinkList s;
+    int j = 0;
+    p = (*L);
+    while(p && j < i - 1){
+        p = p->next;
+        j++;
+    }
+    if(!p || j > i - 1)
+        return 0;
+    s = (LinkList)malloc(sizeof(LNode));
+    s->data = e;
+    s->next = p->next;
+    p->next = s;
+    return 1;
+}
+
+int ListDelete(LinkList *L, int i, ElemType *e){  //e表示地址值  *e表示指向该地址的值
+    //L在这里传递的是链表的头指针的地址,
+    LinkList p;
+    int j = 0;
+    p = (*L);
+    while(p && j < i - 1){
+        p = p->next;
+        j++;
+    }
+    if(!p || j > i - 1)
+        return 0;
+    *e = p->next->data;
+    p->next = p->next->next;
+    return 1;
+}
+
+void Output(LinkList L){
+    LinkList p;
+    p = L->next;
+    while(p!=NULL){
+        printf("%d ",p->data);
+        p = p->next;     //p为指针变量，保存的是地址
+    }
+    printf("\n");
+
+}
+
+
+void MergeList(LinkList *La,LinkList *Lb,LinkList *Lc){ //*La,双重指针，La指向的才是链表，*La指向的La指针变量的地址
+    LinkList pa,pb,pc;
+    pa = (*La)->next;
+    pb = (*Lb)->next;
+    *Lc = pc = *La;
+    while(pa&&pb){
+        if(pa->data <= pb->data){
+            pc->next = pa;
+            pc = pa;
+            pa = pa->next;
+        }
+        else{
+            pc->next = pb;
+            pc = pb;
+            pb = pb->next;
+        }
+    }
+    pc->next = pa?pa:pb; //pa?pa:pb 如果pa为真输出第一个否则第二个
+    free(Lb);
+
+}
+int main(){
+    LinkList La,Lb,Lc;
+    //InitList(&L);
+    CreateListTail(&La,5);
+    Output(La);
+    CreateListTail(&Lb,7);
+    Output(Lb);
+    MergeList(&La,&Lb,&Lc);
+    Output(Lc);
+
+    printf("\nHello world!");
+    return 0;
+}

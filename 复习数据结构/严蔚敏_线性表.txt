@@ -1,0 +1,234 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <malloc.h>
+
+#define LIST_INIT_SIZE 100
+#define LISTCREATEMENT 10
+#define bool int
+#define true 0
+#define false 1
+
+typedef int ElemType;
+typedef struct {
+    ElemType *elem;
+    int length;
+    int listsize;
+}Sqlist;
+
+int InitList(Sqlist *L){
+    L->elem = (ElemType *)malloc(LIST_INIT_SIZE * sizeof(ElemType));  //L是指针变量，保存的是elem数组的地址值，是一个地址值，指针变量
+    if(!L->elem)
+        exit(0);
+    L->length = 0;
+    L->listsize = LIST_INIT_SIZE;
+    return 1;
+}
+
+void DestroyList(Sqlist *L){
+    free(L->elem);
+    L->elem = NULL;
+    L->length = 0;
+    L->listsize = 0;
+}
+
+void ClearList(Sqlist *L){
+    L->length = 0;
+}
+
+bool ListEmpty(Sqlist L){
+    if(L.length == 0)
+        return true;
+    else
+        return false;
+}
+
+int ListLength(Sqlist L){
+    return L.length;
+}
+
+int LocationElem(Sqlist L, ElemType e){
+    int i;
+    for(i = 0; i < L.length; i++)
+        if(L.elem[i] == e)
+        return i+1;
+    return 0;
+}
+
+int PriorElem(Sqlist L,int cur_e,int pre_e){
+    return 0;
+}
+
+void Output(Sqlist L){
+    int i;
+    printf("The Sqlist is as follows:\n");
+    for(i = 0; i < L.length; i++){
+        printf("%d ",L.elem[i]);
+    }
+    printf("\n");
+}
+
+int GetElem(Sqlist L,int i,int *e){
+    if(i < 1 || i > L.length + 1){
+        printf("ERROR.Because the location of element\n");
+        return 0;
+    }
+    *e = L.elem[i - 1];
+    return 0;
+}
+
+int ListInsert(Sqlist *L,int i,int e){
+    if(i < 1 || i > L->length + 1){
+        printf("ERROR.Because the location of element\n");
+        exit(0);
+    }
+    if(L->length >= L->listsize){
+        int *newbase;
+        newbase = (int *)realloc(L->elem,(L->listsize + LISTCREATEMENT)*sizeof(int));
+        if(!newbase){
+            printf("Failure create.\n");
+        exit(0);
+        }
+        L->elem = newbase;
+        L->listsize += LISTCREATEMENT;
+    }
+    int *p,*q;
+    q = &(L->elem[i-1]);
+    for(p = &(L->elem[L->length -1]); p >= q; --p)
+        *(p+1) = *p;
+    *q = e;
+    //int i;
+    //for(i = L->length - 1; i >= l - 1; i--)
+    //    L->elem[i + 1] = L->elem[i];
+    //L->elem[l - 1] = e;
+    L->length++;
+    return 1;
+}
+
+int ListDelete(Sqlist *L, int i, ElemType e){
+    if(i < 1 || i > L->length){
+        printf("ERROR.Because the location of element\n");
+        exit(0);
+    }
+    e = L->elem[i-1];
+    int j;
+    for(j = i - 1;j < L->length - 1; j++){
+        L->elem[j] = L->elem[j+1];
+    }            // 可行
+    //int *p,q;
+   // p = &(L->elem[l - 1]);
+    //e = *p;
+    //q = L->elem + L->length - 1;   //初始位置
+    //for(++p; p<=q; ++p)
+     //   *(p-1) = *p;
+    L->length--;
+    return 1;
+}
+
+void MergeList(Sqlist La,Sqlist Lb,Sqlist *Lc){
+    int i = 1,j = 1;
+    int k = 0,ai = 0,bj = 0;
+    InitList(Lc);
+    while((i <= La.length) && (j <= Lb.length)){
+        GetElem(La,i,&ai);
+        GetElem(Lb,j,&bj);
+        if(ai <= bj){
+            ListInsert(Lc,++k,ai);
+            ++i;
+        }
+        else{
+            ListInsert(Lc,++k,bj);
+            ++j;
+        }
+    }
+    while(i <= La.length){
+        GetElem(La,i++,&ai);
+        ListInsert(Lc,++k,ai);
+    }
+    while(j <= Lb.length){
+        GetElem(Lb,j++,&bj);
+        ListInsert(Lc,++k,bj);
+    }
+}
+
+void Union(Sqlist *La,Sqlist Lb){
+    int i,e,La_len,Lb_len;
+    La_len = ListLength(*La);
+    Lb_len = ListLength(Lb);
+    for(i = 1; i <= Lb_len; i++){
+        GetElem(Lb,i,&e);
+        if(!LocationElem(*La,e))
+            ListInsert(&(*La),++La_len,e);
+    }
+}
+
+void Input(Sqlist *L){
+    int len,i;
+    printf("The length of Sqlist is:");
+    scanf("%d",&len);
+    if(len > L->listsize){
+        printf("overstep the boundary.ERROR");
+        exit(0);
+    }
+    for(i = 0; i < len; i++){
+        printf("Input %d element:",(i+1));
+        scanf("%d",&L->elem[i]);
+    }
+    L->length = len;
+}
+
+void MergeList_Sq(Sqlist L1,Sqlist L2,Sqlist *L3){
+    int *p1,*p2,*p3,p1_last,p2_last;
+    L3->listsize = L3->length = L1.length + L2.length;
+    //(*L3).listsize = L3->length = L1.length + L2.length;
+    p1 = L1.elem;
+    p2 = L2.elem;
+    p3 = L3->elem = (ElemType *)malloc(L3->listsize * sizeof(ElemType));
+    if(!L3->elem)
+        exit(0);
+    p1_last = L1.elem + L1.length - 1;
+    p2_last = L2.elem + L2.length - 1;
+    while(p1 <= p1_last && p2 <= p2_last){
+        if(*p1 <= *p2)
+            *p3++ = *p1++;
+        else
+            *p3++ = *p2++;
+    }
+    while(p1 <= p1_last) *p3++ = *p1++;
+    while(p2 <= p2_last) *p3++ = *p2++;
+}
+int main(){
+    Sqlist La,Lb,L1,L2,Lc,L3;
+    InitList(&La);
+    InitList(&Lb);
+    InitList(&L1);
+    InitList(&L2);
+    InitList(&Lc);
+    InitList(&L3);
+
+
+    ListInsert(&La,1,3);
+    ListInsert(&La,2,5);
+    ListInsert(&La,3,8);
+    ListInsert(&La,4,11);
+    Output(La);
+
+    ListInsert(&Lb,1,2);
+    ListInsert(&Lb,2,6);
+    ListInsert(&Lb,3,8);
+    ListInsert(&Lb,4,9);
+    ListInsert(&Lb,5,11);
+    ListInsert(&Lb,6,15);
+    ListInsert(&Lb,7,20);
+    Output(Lb);
+
+    MergeList(La,Lb,&Lc);
+    Output(Lc);
+
+    Union(&La,Lb);
+    Output(La);
+    Input(&L1);
+    Input(&L2);
+    MergeList_Sq(L1,L2,&L3);
+    Output(L3);
+    return 0;
+}
