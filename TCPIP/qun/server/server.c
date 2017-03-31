@@ -13,7 +13,7 @@ int main()
 	WSADATA wsaData;
 	SOCKET sSocket;
 	//客户地址长度
-	int iLen;
+	int iLen,count =0;
 	int flag = 1;
 	time_t t;
 	//time(&t); //取得当前时间 printf("%s\n",ctime(&t));//
@@ -65,41 +65,29 @@ int main()
 	{
         iRecv=recvfrom(sSocket,recv_buf,BUFFER_LENGTH,0,(SOCKADDR*)&cli,&iLen);
         flag = strcmpi(recv_buf,EXIT);
-        if(!flag){
-            printf(" *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *\n");
-            time(&t);
-            printf("%s",ctime(&t));
-            printf("Client exit!\n\n");
+        if(flag)
+        {
+            if(count%2 == 0){
+                printf("\n");
+                time(&t);
+                printf("%s",ctime(&t));
+                printf("IP:[");
+                printf("%s",recv_buf);
+                printf("]\n");
+            }
+            else{
+                printf("%s\n",recv_buf);
+            }
+            count++;
+       }
+       else{
+            printf("Client exit!\n");
+            printf("-----------------------------------------------\n");
+            count = 0;
             flag = 1;
             continue;
-        }
-		if(iRecv == SOCKET_ERROR)
-		{
-			printf("recvfrom()Failed:%d\n",WSAGetLastError());
-			break;
-		}
-       else if(iRecv == 0)
-            break;
-       else{
-            printf("* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\n");
-            time(&t);
-            printf("%s",ctime(&t));
-            printf("%s\n",recv_buf);
-            //printf("Accept client IP:[%s],port:[%d]\n",inet_ntoa(cli.sin_addr),ntohs(cli.sin_port));
-
        }
-       //iSend = sendto(sSocket,send_buf,sizeof(send_buf),0,(SOCKADDR*)&cli,sizeof(cli));
-       //if(iSend == SOCKET_ERROR){
-        //    printf("sendto()Failed.%d\n",WSAGetLastError());
-          //  printf("-------------------------------------\n");
-         //   break;
-       //}
-       //else if(iSend == 0)
-       // break;
-       //else{
-            //printf("sendto() succeeded!\n");
-            //printf("----------------------");
-      // }
+
 	}
 	closesocket(sSocket);
 	WSACleanup();

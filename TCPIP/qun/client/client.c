@@ -14,7 +14,7 @@ int main(int argc,char *argv[])
 	int iLen;
 	int iSend;
 	int iRecv;
-	char buf_send[100];
+	char buf_send[100] = "-----------------------------------\nClient online\n-----------------------------------";
 	char EXIT[] = "exit";
 	//char  recv_buf[DATA_BUFFER];
 
@@ -34,25 +34,27 @@ int main(int argc,char *argv[])
 	//inet_addr()函数将命令行的点分IP地址转化为用二进制表示的网络字节顺序的IP地址
 	ser.sin_addr.s_addr = inet_addr(argv[1]);
 
-	serl.sin_family = AF_INET;
-	serl.sin_port = htons(iPort);
-	//inet_addr()函数将命令行的点分IP地址转化为用二进制表示的网络字节顺序的IP地址
-	serl.sin_addr.s_addr = inet_addr("127.0.0.1");
-	//建立客户端流式套接口
+
 	sClient = socket(AF_INET,SOCK_DGRAM,0);
 	if(sClient == INVALID_SOCKET)
 	{
 		printf("socket()Failed:%d\n",WSAGetLastError());
 		return 0;
 	}
-    char buf_name[30];
-    printf("Please enter you name:\n");
-    scanf("%s",&buf_name);
-    int len = strlen(buf_name);
-    //char buf_name[1000] = "汪建海";
+	iSend = sendto(sClient,buf_send,sizeof(buf_send),0,(struct sockaddr*)&ser,sizeof(ser));
+    if(iSend == SOCKET_ERROR)
+    {
+        printf("sendto()Failed:%d\n",WSAGetLastError());
+        return 0;
+    }
+    //char buf_name[1024];
+    //printf("Please enter you name:\n");
+    //scanf("%s",&buf_name);
+    //int len = strlen(buf_name);
+    char buf_name[1024] = "汪建海:";
     //int len = 6;//strlen(buf_name);
-    buf_name[len] = ':';
-    buf_name[len + 1] = '\0';
+    //buf_name[len] = ':';
+    //buf_name[len + 1] = '\0';
     printf("Enter message:\n");
 	while(flag){
         printf("*   *   *   *   *   *   *   *   \n");
@@ -72,7 +74,6 @@ int main(int argc,char *argv[])
             else{
                 printf("Client Exit!\n");
             }
-            iSend = sendto(sClient,buf_send,sizeof(buf_send),0,(struct sockaddr*)&serl,sizeof(serl));
         }
         else {
             strcat(buf_name,buf_send);
@@ -85,8 +86,8 @@ int main(int argc,char *argv[])
             else if(iSend == 0)
                 return 0;
             else{
-                iSend = sendto(sClient,buf_name,sizeof(buf_name),0,(struct sockaddr*)&serl,sizeof(serl));
-                buf_name[len + 1] = '\0';
+                buf_name[7] = '\0';
+               // buf_name[len + 1] = '\0';
             }
 
         }

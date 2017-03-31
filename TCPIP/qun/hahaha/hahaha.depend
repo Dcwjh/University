@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1490746889 source:c:\users\mr.wang\desktop\2017上大三下\tcpip\hahaha\clinetserver.c
+	<Winsock2.h>
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+

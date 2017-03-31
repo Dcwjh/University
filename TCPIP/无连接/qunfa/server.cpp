@@ -27,7 +27,7 @@ int main()
 	//要发送给客户的信息
 	//char buf[]="I am a server.";
 	//服务器和客户的地址
-	struct sockaddr_in ser,
+	struct sockaddr_in ser,ser1,ser2,
 		cli;
 	printf("------------------\n");
 	printf("Server waiting\n");
@@ -51,6 +51,12 @@ int main()
 	//htonl()函数把一个四字节主机字节顺序的数转换为网络字节顺序的数
 	//使用系统指定的IP地址INADDR_ANY
 	ser.sin_addr.s_addr=htonl(INADDR_ANY);
+	ser1.sin_family=AF_INET;
+	ser1.sin_port=htons(iPort);
+	ser1.sin_addr.s_addr = inet_addr ("112.0.124.230");
+	ser2.sin_family=AF_INET;
+	ser2.sin_port=htons(iPort);
+	ser2.sin_addr.s_addr = inet_addr ("112.23.81.126");
 	if(bind(sSocket,(LPSOCKADDR)&ser,sizeof(ser))==SOCKET_ERROR)
 	{
 		printf("bind()Failed:%d\n",WSAGetLastError());
@@ -63,13 +69,14 @@ int main()
 	//进入一个无限循环，等待客户的连接请求
 	while(flag)
 	{
-        iRecv=recvfrom(sSocket,recv_buf,BUFFER_LENGTH,0,(SOCKADDR*)&cli,&iLen);
+        iRecv = recvfrom(sSocket,recv_buf,BUFFER_LENGTH,0,(SOCKADDR*)&cli,&iLen);
         flag = strcmpi(recv_buf,EXIT);
         if(!flag){
             printf(" *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *\n");
             time(&t);
             printf("%s",ctime(&t));
-            printf("Client exit!\n\n");
+            printf("IP:[%s]\n",inet_ntoa(cli.sin_addr));
+            printf("Client exit!\n");
             flag = 1;
             continue;
         }
@@ -84,27 +91,33 @@ int main()
             printf("* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\n");
             time(&t);
             printf("%s",ctime(&t));
+            printf("IP:[%s]\n",inet_ntoa(cli.sin_addr));
             printf("%s\n",recv_buf);
             //printf("Accept client IP:[%s],port:[%d]\n",inet_ntoa(cli.sin_addr),ntohs(cli.sin_port));
 
        }
-       //iSend = sendto(sSocket,send_buf,sizeof(send_buf),0,(SOCKADDR*)&cli,sizeof(cli));
-       //if(iSend == SOCKET_ERROR){
-        //    printf("sendto()Failed.%d\n",WSAGetLastError());
-          //  printf("-------------------------------------\n");
-         //   break;
-       //}
-       //else if(iSend == 0)
-       // break;
-       //else{
-            //printf("sendto() succeeded!\n");
-            //printf("----------------------");
-      // }
+       iSend = sendto(sSocket,recv_buf,sizeof(recv_buf),0,(struct sockaddr*)&ser1,sizeof(ser1));
+       if(iSend == SOCKET_ERROR)
+        {
+            printf("sendto()Failed:%d\n",WSAGetLastError());
+            return 0;
+        }
+        else if(iSend == 0)
+            return 0;
+       iSend = sendto(sSocket,recv_buf,sizeof(recv_buf),0,(struct sockaddr*)&ser2,sizeof(ser2));
+       if(iSend == SOCKET_ERROR)
+        {
+            printf("sendto()Failed:%d\n",WSAGetLastError());
+            return 0;
+        }
+        else if(iSend == 0)
+            return 0;
 	}
 	closesocket(sSocket);
 	WSACleanup();
 	return 0;
 }
+
 
 
 

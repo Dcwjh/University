@@ -1,8 +1,0 @@
-# depslib dependency file v1.0
-1490144572 source:c:\users\mr.wang\desktop\2017上大三下\tcpip\无连接\server3\server.cpp
-	<WinSock2.h>
-	<stdio.h>
-	<stdlib.h>
-	<conio.h>
-	<time.h>
-

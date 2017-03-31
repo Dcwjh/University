@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1490769427 source:c:\users\mr.wang\desktop\2017上大三下\tcpip\qun\newqunfa\untitled2.c
+	<Winsock2.h>
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+

@@ -1,0 +1,13 @@
+# depslib dependency file v1.0
+1490756559 source:c:\users\mr.wang\desktop\2017上大三下\tcpip\qunfa\server.cpp
+	<Winsock2.h>
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+
+1490757630 source:c:\users\mr.wang\desktop\2017上大三下\tcpip\qun\qunfa\server.cpp
+	<Winsock2.h>
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+
